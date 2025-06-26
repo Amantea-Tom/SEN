@@ -63,7 +63,7 @@ To evaluate the potential dependence of attitude estimation error on gyroscope t
 ![Error_Vs_T](plots/error_vs_gyro_temp.png)
 
 The results show no significant linear relationship between temperature and estimation error. The regression slopes for all axes remain below 0.02 deg/°C, and the low R² values indicate minimal explanatory power. Although slight non-linear behavior is observed at low temperature ranges, it does not suggest a consistent or systematic thermal bias affecting the attitude determination process.
-Next step is evaluate 
+Next step willl be evaluate a potencial systematic bias.
 
 ---
 ## Attached Files
