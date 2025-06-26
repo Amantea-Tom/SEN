@@ -65,12 +65,26 @@ To evaluate the potential dependence of attitude estimation error on gyroscope t
 The results show no significant linear relationship between temperature and estimation error. The regression slopes for all axes remain below 0.02 deg/°C, and the low R² values indicate minimal explanatory power. Although slight non-linear behavior is observed at low temperature ranges, it does not suggest a consistent or systematic thermal bias affecting the attitude determination process.
 Next step willl be evaluate a potencial systematic bias.
 
+![Bias](plots/quarter_hour_error_mean.png)
+
+The attitude estimation errors for all three axes (X, Y, Z) show a consistent and approximately linear increase over the course of the day. While the growth rates vary slightly between axes, their overall behavior suggests a progressive accumulation of error.
+
+Based on the current evidence, the most likely explanation is:
+
+A bias in the gyroscope measurement, uncorrected or under-compensated, causes the AOCS system to accumulate a small but systematic error during integration of angular rates. This results in a gradual drift in the estimated attitude over time.
+
+Other contributing factors, such as an incomplete sensor calibration or an inaccurate attitude propagation model, cannot yet be ruled out. However, the smooth and monotonic nature of the error supports a bias-driven drift as the primary mechanism.
+
+Although not critical at this stage, the issue may become significant for high-precision pointing tasks or longer mission durations. It is recommended to further characterize the gyroscope bias and validate the AOCS integration algorithm.
+
+
 ---
 ## Attached Files
 
 - `attitude_error.png`
 - `Gyro_thermal_drift_case.csv`
-
+- `error_vs_gyro_temp.png`
+- `quarter_hour_error_mean.png`
 
 ---
 

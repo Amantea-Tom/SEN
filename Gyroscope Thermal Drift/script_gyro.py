@@ -12,8 +12,11 @@ os.makedirs(output_dir, exist_ok=True)
 df['error_x'] = df['est_att_x'] - df['true_att_x']
 df['error_y'] = df['est_att_y'] - df['true_att_y']
 df['error_z'] = df['est_att_z'] - df['true_att_z']
+# Agregar columna de fecha (sin hora)
+df['hour'] = df['timestamp'].dt.floor('15min')
 
-
+# Agrupar por hora
+interval_mean = df.groupby('hour')[['error_x', 'error_y', 'error_z']].mean()
 # Graficar errores
 fig, axs = plt.subplots(3, 1, figsize=(12, 8), sharex=True)
 axs[0].plot(df['timestamp'], df['error_x'], label='Error X', color='tab:red')
@@ -62,4 +65,44 @@ plt.tight_layout()
 
 # Guardar
 plt.savefig(os.path.join(output_dir, "error_vs_gyro_temp.png"))
+plt.close()
+
+# Histogramas
+fig, axs = plt.subplots(1, 3, figsize=(18, 5))
+
+for i, axis in enumerate(['error_x', 'error_y', 'error_z']):
+    data = df[axis]
+    mean = data.mean()
+    std = data.std()
+    
+    axs[i].hist(data, bins=30, color='skyblue', edgecolor='black')
+    axs[i].axvline(mean, color='red', linestyle='--', label=f'Mean = {mean:.3f}°')
+    axs[i].set_title(f'{axis.upper()} (std = {std:.3f}°)')
+    axs[i].set_xlabel("Error (deg)")
+    axs[i].set_ylabel("Count")
+    axs[i].legend()
+
+plt.tight_layout()
+plt.savefig(os.path.join(output_dir, "attitude_error_distribution.png"))
+plt.close()
+
+
+# Graficar
+plt.figure(figsize=(14, 6))
+plt.plot(interval_mean.index, interval_mean['error_x'], label='Error X', color='tab:red', marker='o')
+plt.plot(interval_mean.index, interval_mean['error_y'], label='Error Y', color='tab:blue', marker='o')
+plt.plot(interval_mean.index, interval_mean['error_z'], label='Error Z', color='tab:green', marker='o')
+
+plt.title("Mean Attitude Error Every 15 Minutes")
+plt.xlabel("Time")
+plt.ylabel("Mean Error (deg)")
+plt.grid(True, linestyle='--', alpha=0.6)
+plt.xticks(rotation=45)
+plt.legend()
+plt.tight_layout()
+
+# Guardar
+output_dir = "plots"
+os.makedirs(output_dir, exist_ok=True)
+plt.savefig(os.path.join(output_dir, "quarter_hour_error_mean.png"))
 plt.close()
